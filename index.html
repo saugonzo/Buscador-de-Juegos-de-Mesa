@@ -6,86 +6,102 @@
   <title>Buscador de Juegos de Mesa</title>
   <style>
     body {
-      font-family: sans-serif;
-      background: #f9f9f9;
-      text-align: center;
+      font-family: Arial, sans-serif;
       padding: 2em;
+      background: #f4f4f4;
+      text-align: center;
     }
     h1 {
-      margin-bottom: 1em;
+      color: #333;
     }
     input {
       padding: 0.5em;
-      font-size: 1em;
       width: 80%;
       max-width: 400px;
+      font-size: 1em;
+    }
+    button {
+      margin-top: 1em;
+      padding: 0.6em 1.2em;
+      font-size: 1em;
+      cursor: pointer;
     }
     .store-buttons {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 1em;
       margin-top: 2em;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1em;
     }
-    a.button {
-      display: block;
-      padding: 1em;
-      background: #007BFF;
+    .store-buttons a {
+      background-color: #007bff;
       color: white;
       text-decoration: none;
-      border-radius: 8px;
-      font-weight: bold;
-      transition: background 0.2s;
+      padding: 0.6em 1em;
+      border-radius: 5px;
+      transition: background 0.3s;
     }
-    a.button:hover {
-      background: #0056b3;
+    .store-buttons a:hover {
+      background-color: #0056b3;
     }
   </style>
 </head>
 <body>
   <h1>Buscador de Juegos de Mesa</h1>
   <input type="text" id="query" placeholder="Escribe el nombre del juego..." />
-  
+  <br /><br />
+  <button onclick="abrirTodas()">Abrir todas</button>
+
   <div class="store-buttons" id="results">
     <!-- Botones generados dinámicamente -->
   </div>
 
   <script>
+    const input = document.getElementById("query");
+    const resultsDiv = document.getElementById("results");
+
     const stores = [
-      { name: "Alfa y Delta", url: "https://alfaydelta.com/catalogsearch/result/?q=" },
-      { name: "Cantera Lúdica", url: "https://canteraludica.com/search?q=" },
       { name: "El Duende", url: "https://www.elduende.com.mx/?s=", suffix: "&post_type=product&dgwt_wcas=1" },
-      { name: "Eurojuegos", url: "https://www.eurojuegos.com.mx/?s=", suffix: "&post_type=product" },
       { name: "Geeky Stuff", url: "https://www.geekystuff.mx/search-results-page/" },
+      { name: "Eurojuegos", url: "https://www.eurojuegos.com.mx/?s=", suffix: "&post_type=product" },
+      { name: "Yego Games", url: "https://yegogames.com/search?q=" },
+      { name: "T de Tlacuache", url: "https://tdetlacuache.com/search?q=" },
+      { name: "Cantera Lúdica", url: "https://canteraludica.com/search?q=" },
+      { name: "Alfa y Delta", url: "https://www.alfaydelta.com/search?q=" },
       { name: "Infinite Skill", url: "https://www.infiniteskill.com.mx/?s=", suffix: "&post_type=product" },
       { name: "Juego de Belugas", url: "https://juegodebelugas.com/search?q=" },
       { name: "La Casa de la Educadora", url: "https://lacasadelaeducadora.com/search?q=" },
-      { name: "T de Tlacuache", url: "https://tdetlacuache.com/search?q=" },
-      { name: "Yego Games", url: "https://yegogames.com/search?q=" },
       { name: "Juega Más", url: "https://juegamas.mx/website/search?search=" , suffix: "&order=name+asc" },
       { name: "Red Queen", url: "https://www.redqueen.mx/search?q=" },
       { name: "Amazon México", url: "https://www.amazon.com.mx/s?k=" },
       { name: "Mercado Libre", url: "https://listado.mercadolibre.com.mx/" }
     ];
 
-    const input = document.getElementById("query");
-    const results = document.getElementById("results");
-
     input.addEventListener("input", () => {
       const query = input.value.trim().toLowerCase().replace(/ /g, "+");
-      results.innerHTML = "";
+      resultsDiv.innerHTML = "";
 
-      if (query.length === 0) return;
+      if (query === "") return;
 
       stores.forEach(store => {
         const link = store.url + query + (store.suffix || "");
         const a = document.createElement("a");
         a.href = link;
         a.target = "_blank";
-        a.className = "button";
         a.textContent = store.name;
-        results.appendChild(a);
+        resultsDiv.appendChild(a);
       });
     });
+
+    function abrirTodas() {
+      const query = input.value.trim().toLowerCase().replace(/ /g, "+");
+      if (!query) return;
+
+      stores.forEach(store => {
+        const url = store.url + query + (store.suffix || "");
+        window.open(url, "_blank");
+      });
+    }
   </script>
 </body>
 </html>
