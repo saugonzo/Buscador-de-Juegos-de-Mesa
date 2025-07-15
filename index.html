@@ -67,24 +67,11 @@
       text-align: center;
       transition: all 0.3s;
       box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
     }
     .store-card:hover {
       background-color: #007bff;
       color: white;
       transform: translateY(-2px);
-    }
-    .store-card img {
-      width: 40px;
-      height: 40px;
-      object-fit: contain;
-      margin-bottom: 0.5em;
-      transition: transform 0.3s;
-    }
-    .store-card:hover img {
-      transform: scale(1.1);
     }
     @media (prefers-color-scheme: dark) {
       body {
@@ -121,20 +108,20 @@
     const resultsDiv = document.getElementById("results");
 
     const stores = [
-      { name: "El Duende", url: "https://www.elduende.com.mx/?s=", suffix: "&post_type=product&dgwt_wcas=1", logo: "https://saugonzo.github.io/Buscador-de-Juegos-de-Mesa/logos/elduende.png" },
-      { name: "Geeky Stuff", url: "https://www.geekystuff.mx/search-results-page/", logo: "https://saugonzo.github.io/Buscador-de-Juegos-de-Mesa/logos/geekystuff.png" },
-      { name: "Eurojuegos", url: "https://www.eurojuegos.com.mx/?s=", suffix: "&post_type=product", logo: "https://saugonzo.github.io/Buscador-de-Juegos-de-Mesa/logos/eurojuegos.png" },
-      { name: "Yego Games", url: "https://yegogames.com/search?q=", logo: "https://saugonzo.github.io/Buscador-de-Juegos-de-Mesa/logos/yego.png" },
-      { name: "T de Tlacuache", url: "https://tdetlacuache.com/search?q=", logo: "https://saugonzo.github.io/Buscador-de-Juegos-de-Mesa/logos/tlacuache.png" },
-      { name: "Cantera Lúdica", url: "https://canteraludica.com/search?q=", logo: "https://saugonzo.github.io/Buscador-de-Juegos-de-Mesa/logos/cantera.png" },
-      { name: "Alfa y Delta", url: "https://www.alfaydelta.com/search?q=", logo: "https://saugonzo.github.io/Buscador-de-Juegos-de-Mesa/logos/alfaydelta.png" },
-      { name: "Infinite Skill", url: "https://www.infiniteskill.com.mx/?s=", suffix: "&post_type=product", logo: "https://saugonzo.github.io/Buscador-de-Juegos-de-Mesa/logos/infiniteskill.png" },
-      { name: "Juego de Belugas", url: "https://juegodebelugas.com/search?q=", logo: "https://saugonzo.github.io/Buscador-de-Juegos-de-Mesa/logos/belugas.png" },
-      { name: "La Casa de la Educadora", url: "https://lacasadelaeducadora.com/search?q=", logo: "https://saugonzo.github.io/Buscador-de-Juegos-de-Mesa/logos/educadora.png" },
-      { name: "Juega Más", url: "https://juegamas.mx/website/search?search=", suffix: "&order=name+asc", logo: "https://saugonzo.github.io/Buscador-de-Juegos-de-Mesa/logos/juegamas.png" },
-      { name: "Red Queen", url: "https://www.redqueen.mx/search?q=", logo: "https://saugonzo.github.io/Buscador-de-Juegos-de-Mesa/logos/redqueen.png" },
-      { name: "Amazon México", url: "https://www.amazon.com.mx/s?k=", logo: "https://saugonzo.github.io/Buscador-de-Juegos-de-Mesa/logos/amazon.png" },
-      { name: "Mercado Libre", url: "https://listado.mercadolibre.com.mx/", logo: "https://saugonzo.github.io/Buscador-de-Juegos-de-Mesa/logos/mercadolibre.png" }
+      { name: "El Duende", url: "https://www.elduende.com.mx/?s=", suffix: "&post_type=product&dgwt_wcas=1" },
+      { name: "Geeky Stuff", url: "https://www.geekystuff.mx/search-results-page/" },
+      { name: "Eurojuegos", url: "https://www.eurojuegos.com.mx/?s=", suffix: "&post_type=product" },
+      { name: "Yego Games", url: "https://yegogames.com/search?q=" },
+      { name: "T de Tlacuache", url: "https://tdetlacuache.com/search?q=" },
+      { name: "Cantera Lúdica", url: "https://canteraludica.com/search?q=" },
+      { name: "Alfa y Delta", url: "https://www.alfaydelta.com/search?q=" },
+      { name: "Infinite Skill", url: "https://www.infiniteskill.com.mx/?s=", suffix: "&post_type=product" },
+      { name: "Juego de Belugas", url: "https://juegodebelugas.com/search?q=" },
+      { name: "La Casa de la Educadora", url: "https://lacasadelaeducadora.com/search?q=" },
+      { name: "Juega Más", url: "https://juegamas.mx/website/search?search=", suffix: "&order=name+asc" },
+      { name: "Red Queen", url: "https://www.redqueen.mx/search?q=" },
+      { name: "Amazon México", url: "https://www.amazon.com.mx/s?k=" },
+      { name: "Mercado Libre", url: "https://listado.mercadolibre.com.mx/" }
     ];
 
     input.addEventListener("input", () => {
@@ -149,16 +136,7 @@
         a.href = link;
         a.target = "_blank";
         a.className = "store-card";
-
-        const img = document.createElement("img");
-        img.src = store.logo || "";
-        img.alt = store.name;
-
-        const name = document.createElement("div");
-        name.textContent = store.name;
-
-        a.appendChild(img);
-        a.appendChild(name);
+        a.textContent = store.name;
         resultsDiv.appendChild(a);
       });
     });
