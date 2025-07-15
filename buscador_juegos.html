@@ -1,0 +1,71 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Buscador de Juegos de Mesa</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+            margin: 20px;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        input, button {
+            padding: 10px;
+            font-size: 16px;
+            margin: 5px 0;
+        }
+        .button-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #3e8e41;
+        }
+    </style>
+    <script>
+        function search(store) {
+            const game = document.getElementById("gameName").value.trim().replace(/\s+/g, "+");
+            if (!game) return;
+
+            const urls = {
+                "Alfa y Delta": "https://alfaydelta.com/search?q=" + game,
+                "Cantera Lúdica": "https://canteraludica.com/search?q=" + game,
+                "Yego Games": "https://yegogames.com/search?q=" + game,
+                "T de Tlacuache": "https://tdetlacuache.com/search?q=" + game,
+                "El Duende": "https://juegoselduende.com/?s=" + game + "&post_type=product",
+                "Geeky Stuff": "https://geeky.com.mx/search?q=" + game,
+                "Eurojuegos": "https://eurojuegos.com.mx/catalogsearch/result/?q=" + game
+            };
+
+            window.open(urls[store], "_blank");
+        }
+    </script>
+</head>
+<body>
+    <h1>Buscador de Juegos de Mesa</h1>
+    <label for="gameName">Nombre del juego:</label><br>
+    <input type="text" id="gameName" placeholder="Escribe el nombre del juego">
+    <div class="button-container">
+        <button onclick="search('Alfa y Delta')">Alfa y Delta</button>
+        <button onclick="search('Cantera Lúdica')">Cantera Lúdica</button>
+        <button onclick="search('Yego Games')">Yego Games</button>
+        <button onclick="search('T de Tlacuache')">T de Tlacuache</button>
+        <button onclick="search('El Duende')">El Duende</button>
+        <button onclick="search('Geeky Stuff')">Geeky Stuff</button>
+        <button onclick="search('Eurojuegos')">Eurojuegos</button>
+    </div>
+</body>
+</html>
