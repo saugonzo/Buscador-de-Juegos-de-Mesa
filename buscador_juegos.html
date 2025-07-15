@@ -41,13 +41,13 @@
             if (!game) return;
 
             const urls = {
-                "Alfa y Delta": "https://alfaydelta.com/search?q=" + game,
-                "Cantera Lúdica": "https://canteraludica.com/search?q=" + game,
-                "Yego Games": "https://yegogames.com/search?q=" + game,
-                "T de Tlacuache": "https://tdetlacuache.com/search?q=" + game,
-                "El Duende": "https://juegoselduende.com/?s=" + game + "&post_type=product",
-                "Geeky Stuff": "https://geeky.com.mx/search?q=" + game,
-                "Eurojuegos": "https://eurojuegos.com.mx/catalogsearch/result/?q=" + game
+                "Alfa y Delta": "https://alfaydelta.com/search?q=" + gameEncoded,
+            "Cantera Lúdica": "https://canteraludica.com/search?q=" + gameEncoded,
+            "Yego Games": "https://yegogames.com/search?q=" + gameEncoded,
+            "T de Tlacuache": "https://tdetlacuache.com/search?q=" + gameEncoded,
+            "El Duende": "https://www.elduende.com.mx/?s=" + gamePlus + "&post_type=product&dgwt_wcas=1",
+            "Geeky Stuff": "https://www.geekystuff.mx/search-results-page/" + gamePlus,
+            "Eurojuegos": "https://www.eurojuegos.com.mx/?s=" + gamePlus + "&post_type=product"
             };
 
             window.open(urls[store], "_blank");
