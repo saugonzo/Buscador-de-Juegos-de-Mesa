@@ -1,155 +1,384 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Buscador de Juegos de Mesa</title>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito&display=swap" rel="stylesheet">
+  <title>Buscador de Juegos de Mesa — Mejorado</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: 'Nunito', sans-serif;
-      padding: 2em;
-      background: linear-gradient(to bottom, #f0f2f5, #d9e2ec);
-      text-align: center;
-      color: #333;
-      transition: background 0.3s, color 0.3s;
-    }
-    h1 {
-      font-size: 2em;
-      margin-bottom: 1em;
-    }
-    input {
-      padding: 0.7em;
-      width: 80%;
-      max-width: 420px;
-      font-size: 1em;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      transition: box-shadow 0.3s;
-    }
-    input:focus {
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(100, 149, 237, 0.4);
-    }
-    button {
-      margin-top: 1em;
-      padding: 0.7em 1.5em;
-      font-size: 1em;
-      cursor: pointer;
-      background-color: #28a745;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-      transition: background 0.3s, transform 0.2s;
-    }
-    button:hover {
-      background-color: #218838;
-      transform: scale(1.03);
-    }
-    .store-buttons {
-      margin-top: 2em;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 1em;
-    }
-    .store-card {
-      background-color: white;
-      color: #007bff;
-      text-decoration: none;
-      padding: 1em;
-      border-radius: 12px;
-      border: 1px solid #007bff;
-      width: 140px;
-      text-align: center;
-      transition: all 0.3s;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-    }
-    .store-card:hover {
-      background-color: #007bff;
-      color: white;
-      transform: translateY(-2px);
+    :root {
+      --bg: #f0f2f5; --bg2: #d9e2ec; --text: #263238; --muted:#5c6b73;
+      --primary:#2563eb; --primary-700:#1d4ed8; --ok:#16a34a; --warn:#f59e0b;
+      --card:#ffffff; --border:#cbd5e1;
     }
     @media (prefers-color-scheme: dark) {
-      body {
-        background: #121212;
-        color: #f0f0f0;
-      }
-      input {
-        background: #2c2c2c;
-        color: #fff;
-        border: 1px solid #444;
-      }
-      .store-card {
-        background-color: #1f1f1f;
-        color: #90cdf4;
-        border-color: #90cdf4;
-      }
-      .store-card:hover {
-        background-color: #3182ce;
-        color: white;
-      }
+      :root { --bg:#0b0f14; --bg2:#0b0f14; --text:#e5e7eb; --muted:#9aa4ad; --primary:#60a5fa; --primary-700:#3b82f6; --card:#0f172a; --border:#223047; }
     }
+    * { box-sizing: border-box }
+    body {
+      font-family: 'Nunito', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      margin: 0; color: var(--text);
+      background: linear-gradient(to bottom, var(--bg), var(--bg2));
+      min-height: 100svh;
+      display: grid; place-items: start center; padding: 24px;
+    }
+    .app { width: min(980px, 92vw); }
+    h1 { margin: 0 0 12px; font-weight: 800; letter-spacing: 0.2px; }
+    p.lead { margin: 0 0 16px; color: var(--muted); }
+    .row { display: grid; gap: 12px; grid-template-columns: 1fr auto auto auto auto; align-items: center; }
+    .row > * { height: 44px }
+    input[type="text"]{ width: 100%; padding: 0 14px; border-radius: 12px; border: 1px solid var(--border); background: var(--card); color: var(--text); box-shadow: 0 4px 12px rgba(0,0,0,.04); }
+    .btn { border: 1px solid transparent; border-radius: 12px; padding: 0 14px; cursor: pointer; font-weight: 700; background: var(--primary); color: #fff; box-shadow: 0 6px 16px rgba(37,99,235,.25); transition: transform .06s ease; }
+    .btn:hover { transform: translateY(-1px) }
+    .btn.secondary { background: transparent; color: var(--primary); border-color: var(--primary); box-shadow: none }
+    .btn.warn { background: var(--warn); box-shadow: 0 6px 16px rgba(245,158,11,.25) }
+    .btn.ok { background: var(--ok); box-shadow: 0 6px 16px rgba(22,163,74,.25) }
+
+    .grid { margin-top: 18px; display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 12px; display: grid; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,.06); }
+    .card h3 { margin: 0; font-size: 1.02rem }
+    .card small { color: var(--muted) }
+    .card a { text-decoration: none; color: var(--primary); word-break: break-all }
+    .row2 { display:flex; gap:8px; flex-wrap: wrap; align-items:center }
+    label.store { display:flex; align-items:center; gap:8px; }
+    label.store input { width: auto; height: auto }
+
+    .preview { margin-top: 18px; font-size: .95rem; color: var(--muted) }
+    .preview code { user-select: all; display:block; padding:10px; background: var(--card); border:1px solid var(--border); border-radius: 10px; overflow:auto }
+    .muted { color: var(--muted) }
+
+    details.testlog { margin-top: 20px; font-size: .9rem }
+    details.testlog summary { cursor:pointer }
+    .pass { color: #16a34a }
+    .fail { color: #dc2626 }
   </style>
 </head>
 <body>
-  <h1>Buscador de Juegos de Mesa</h1>
-  <input type="text" id="query" placeholder="Escribe el nombre del juego..." />
-  <br /><br />
-  <button onclick="abrirTodas()">Abrir todas</button>
+  <div class="app">
+    <h1>Buscador de Juegos de Mesa</h1>
+    <p class="lead">Escribe el nombre del juego, elige tiendas y abre las búsquedas en nuevas pestañas. <span class="muted">Enter = abrir seleccionadas · Ctrl+Enter = abrir todas</span></p>
 
-  <div class="store-buttons" id="results"></div>
+    <div class="row">
+      <input id="query" type="text" placeholder="Escribe el nombre del juego…" autofocus />
+      <button class="btn ok" id="btn-open-selected" title="Abrir solo seleccionadas">Abrir seleccionadas</button>
+      <button class="btn" id="btn-open-all" title="Abrir todas las tiendas">Abrir todas</button>
+      <button class="btn secondary" id="btn-copy" title="Copiar enlaces">Copiar</button>
+      <button class="btn secondary" id="btn-stores" title="Gestionar tiendas">Tiendas</button>
+    </div>
+
+    <div class="grid" id="stores-grid"></div>
+    <div class="preview" id="preview" hidden>
+      <div class="muted">Enlaces generados (vista previa):</div>
+      <code id="links-preview"></code>
+    </div>
+
+    <!-- Modal de gestión de tiendas -->
+    <dialog id="stores-dialog">
+      <form method="dialog" style="min-width: min(780px, 92vw); background: var(--card); color: var(--text); border:1px solid var(--border); border-radius:16px; padding:16px">
+        <h2 style="margin:0 0 8px">Tiendas</h2>
+        <p class="muted" style="margin-top:0">Agrega, edita o elimina tiendas. Usa <code>{q}</code> en la URL donde va el texto a buscar. Marca "+ espacios" si la tienda prefiere <em>+</em> en vez de <em>%20</em>.</p>
+        <div id="stores-editor" class="card" style="max-height: 50svh; overflow:auto"></div>
+        <div class="row2" style="margin-top: 12px">
+          <button class="btn ok" value="save" id="btn-save-stores">Guardar</button>
+          <button class="btn secondary" value="cancel">Cerrar</button>
+          <span class="muted" style="margin-left:auto">Tip: Exporta/Importa tus tiendas.</span>
+          <button class="btn secondary" type="button" id="btn-export">Exportar</button>
+          <label class="btn secondary" for="import-file">Importar</label>
+          <input id="import-file" type="file" accept="application/json" style="display:none" />
+        </div>
+      </form>
+    </dialog>
+
+    <details class="testlog" id="testlog">
+      <summary>Ver pruebas (auto)</summary>
+      <div id="test-results"></div>
+    </details>
+  </div>
 
   <script>
-    const input = document.getElementById("query");
-    const resultsDiv = document.getElementById("results");
-
-    const stores = [
-      { name: "El Duende", url: "https://www.elduende.com.mx/?s=", suffix: "&post_type=product&dgwt_wcas=1" },
-      { name: "Geeky Stuff", url: "https://www.geekystuff.mx/search-results-page/" },
-      { name: "Eurojuegos", url: "https://www.eurojuegos.com.mx/?s=", suffix: "&post_type=product" },
-      { name: "Yego Games", url: "https://yegogames.com/search?q=" },
-      { name: "T de Tlacuache", url: "https://tdetlacuache.com/search?q=" },
-      { name: "Cantera Lúdica", url: "https://canteraludica.com/search?q=" },
-      { name: "Alfa y Delta", url: "https://www.alfaydelta.com/search?q=" },
-      { name: "Infinite Skill", url: "https://www.infiniteskill.com.mx/?s=", suffix: "&post_type=product" },
-      { name: "Juego de Belugas", url: "https://juegodebelugas.com/search?q=" },
-      { name: "La Casa de la Educadora", url: "https://lacasadelaeducadora.com/search?q=" },
-      { name: "Juega Más", url: "https://juegamas.mx/website/search?search=", suffix: "&order=name+asc" },
-      { name: "Red Queen", url: "https://www.redqueen.mx/search?q=" },
-      { name: "Amazon México", url: "https://www.amazon.com.mx/s?k=" },
-      { name: "Mercado Libre", url: "https://listado.mercadolibre.com.mx/" }
+    // =====================
+    // Configuración de tiendas
+    // =====================
+    // Tiendas predefinidas (puedes editar estas, pero mejor usa el panel de "Tiendas")
+    const DEFAULT_STORES = [
+      { id:"elduende",       name:"El Duende",            pattern:"https://www.elduende.com.mx/?s={q}&post_type=product&dgwt_wcas=1", plusSpaces:true },
+      { id:"geekystuff",     name:"Geeky Stuff",          pattern:"https://www.geekystuff.mx/search-results-page/?q={q}", plusSpaces:true },
+      { id:"eurojuegos",     name:"Eurojuegos",           pattern:"https://www.eurojuegos.com.mx/?s={q}&post_type=product", plusSpaces:true },
+      { id:"yegogames",      name:"Yego Games",           pattern:"https://yegogames.com/search?q={q}", plusSpaces:false },
+      { id:"tdetlacuache",   name:"T de Tlacuache",       pattern:"https://tdetlacuache.com/search?q={q}", plusSpaces:false },
+      { id:"canteraludica",  name:"Cantera Lúdica",       pattern:"https://canteraludica.com/search?q={q}", plusSpaces:false },
+      { id:"alfaydelta",     name:"Alfa y Delta",         pattern:"https://www.alfaydelta.com/search?q={q}", plusSpaces:false },
+      { id:"infiniteskill",  name:"Infinite Skill",       pattern:"https://www.infiniteskill.com.mx/?s={q}&post_type=product", plusSpaces:true },
+      { id:"belugas",        name:"Juego de Belugas",     pattern:"https://juegodebelugas.com/search?q={q}", plusSpaces:false },
+      { id:"educadora",      name:"La Casa de la Educadora", pattern:"https://lacasadelaeducadora.com/search?q={q}", plusSpaces:false },
+      { id:"juegamas",       name:"Juega Más",            pattern:"https://juegamas.mx/website/search?search={q}&order=name+asc", plusSpaces:false },
+      { id:"redqueen",       name:"Red Queen",             pattern:"https://www.redqueen.mx/search?q={q}", plusSpaces:false },
+      { id:"amazon",         name:"Amazon México",         pattern:"https://www.amazon.com.mx/s?k={q}", plusSpaces:true },
+      { id:"meli",           name:"Mercado Libre",        pattern:"https://listado.mercadolibre.com.mx/{q}", plusSpaces:true }
     ];
 
-    input.addEventListener("input", () => {
-      const query = input.value.trim().toLowerCase().replace(/ /g, "+");
-      resultsDiv.innerHTML = "";
+    // Carga/guarda de tiendas personalizadas
+    const CUSTOM_KEY = "boardgame-search-custom-stores";
+    function loadCustomStores(){
+      try { return JSON.parse(localStorage.getItem(CUSTOM_KEY)||"[]"); } catch { return []; }
+    }
+    function saveCustomStores(list){
+      localStorage.setItem(CUSTOM_KEY, JSON.stringify(list||[]));
+    }
+    function getStores(){
+      return [...DEFAULT_STORES, ...loadCustomStores()];
+    }
 
-      if (query === "") return;
+    // =====================
+    // Utilidades
+    // =====================
+    const $ = sel => document.querySelector(sel);
+    const grid = document.querySelector("#stores-grid");
+    const input = document.querySelector("#query");
+    const btnOpenSelected = document.querySelector("#btn-open-selected");
+    const btnOpenAll = document.querySelector("#btn-open-all");
+    const btnCopy = document.querySelector("#btn-copy");
+    const btnStores = document.querySelector("#btn-stores");
+    const dlgStores = document.querySelector("#stores-dialog");
+    const editor = document.querySelector("#stores-editor");
+    const btnSaveStores = document.querySelector("#btn-save-stores");
+    const btnExport = document.querySelector("#btn-export");
+    const inputImport = document.querySelector("#import-file");
+    const previewWrap = document.querySelector("#preview");
+    const previewCode = document.querySelector("#links-preview");
+    const testResults = document.querySelector("#test-results");
 
-      stores.forEach(store => {
-        const link = store.url + query + (store.suffix || "");
-        const a = document.createElement("a");
-        a.href = link;
-        a.target = "_blank";
-        a.className = "store-card";
-        a.textContent = store.name;
-        resultsDiv.appendChild(a);
-      });
-    });
+    const LS_KEY = "boardgame-search-v2";
 
-    function abrirTodas() {
-      const query = input.value.trim().toLowerCase().replace(/ /g, "+");
-      if (!query) return;
+    function saveState() {
+      const state = {
+        q: input.value,
+        selected: [...grid.querySelectorAll('input[type="checkbox"]:checked')].map(c=>c.value)
+      };
+      localStorage.setItem(LS_KEY, JSON.stringify(state));
+    }
 
-      stores.forEach(store => {
-        const url = store.url + query + (store.suffix || "");
-        window.open(url, "_blank");
+    function loadState() {
+      try {
+        const state = JSON.parse(localStorage.getItem(LS_KEY)||"null");
+        if (!state) return;
+        input.value = state.q || "";
+        if (state.selected) {
+          state.selected.forEach(id => {
+            const cb = grid.querySelector(`input[value="${id}"]`);
+            if (cb) cb.checked = true;
+          });
+        }
+      } catch {}
+    }
+
+    function plusifySpaces(q){
+      return q.trim().replace(/\s+/g, "+");
+    }
+
+    function buildUrl(store, rawQuery){
+      // encodeURIComponent protege tildes, ñ, símbolos, etc.
+      // Algunas tiendas funcionan mejor con "+" para espacios; controlado por plusSpaces.
+      const encoded = encodeURIComponent(rawQuery.trim());
+      const q = store.plusSpaces ? plusifySpaces(rawQuery) : encoded;
+      return store.pattern.replace("{q}", q);
+    }
+
+    function renderStores(){
+      grid.innerHTML = '';
+      const STORES = getStores();
+      STORES.forEach(s => {
+        const urlSample = buildUrl(s, input.value || "Catan");
+        const el = document.createElement('div');
+        el.className = 'card';
+        el.innerHTML = `
+          <div class="row2">
+            <label class="store"><input type="checkbox" value="${s.id}" checked /> <strong>${s.name}</strong></label>
+            <a href="${urlSample}" target="_blank" rel="noopener">Probar</a>
+          </div>
+          <small>URL: <a href="${urlSample}" target="_blank" rel="noopener">${urlSample}</a></small>
+        `;
+        grid.appendChild(el);
       });
     }
+
+    function currentLinks(selectedOnly=true){
+      const STORES = getStores();
+      const chosen = selectedOnly
+        ? new Set([...grid.querySelectorAll('input[type="checkbox"]:checked')].map(c=>c.value))
+        : new Set(STORES.map(s=>s.id));
+      const q = input.value.trim();
+      if (!q) return [];
+      return STORES.filter(s=>chosen.has(s.id)).map(s=>buildUrl(s, q));
+    }
+
+    function openLinks(links){
+      links.forEach(url => window.open(url, '_blank'));
+    }
+
+    function updatePreview(){
+      const links = currentLinks(true);
+      previewCode.textContent = links.join('\n');
+      previewWrap.hidden = links.length === 0;
+    }
+
+    // Eventos
+    input.addEventListener('input', () => {
+      updatePreview();
+      saveState();
+    });
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && e.ctrlKey) {
+        const links = currentLinks(false); if (links.length) openLinks(links);
+      } else if (e.key === 'Enter') {
+        const links = currentLinks(true); if (links.length) openLinks(links);
+      }
+    });
+
+    btnOpenSelected.addEventListener('click', ()=>{
+      const links = currentLinks(true); if (links.length) openLinks(links);
+    });
+
+    btnOpenAll.addEventListener('click', ()=>{
+      const links = currentLinks(false); if (links.length) openLinks(links);
+    });
+
+    btnCopy.addEventListener('click', async ()=>{
+      const links = currentLinks(true);
+      if (!links.length) return;
+      try {
+        // FIX: unir enlaces con "\n"; antes había un salto de línea sin escapar
+        await navigator.clipboard.writeText(links.join('\n'));
+        btnCopy.textContent = '¡Copiado!';
+        setTimeout(()=> btnCopy.textContent = 'Copiar', 1200);
+      } catch {
+        alert('No se pudo copiar al portapapeles.');
+      }
+    });
+
+    // Abrir modal tiendas
+    btnStores.addEventListener('click', ()=>{
+      renderStoresEditor();
+      dlgStores.showModal();
+    });
+
+    // Guardar tiendas desde el editor
+    btnSaveStores.addEventListener('click', (e)=>{
+      e.preventDefault();
+      const rows = [...editor.querySelectorAll('[data-row]')];
+      const list = rows.map(r=>({
+        id: r.querySelector('[data-id]').value.trim() || crypto.randomUUID().slice(0,8),
+        name: r.querySelector('[data-name]').value.trim(),
+        pattern: r.querySelector('[data-pattern]').value.trim(),
+        plusSpaces: r.querySelector('[data-plus]').checked,
+      })).filter(x=>x.id && x.name && x.pattern.includes('{q}'));
+      saveCustomStores(list);
+      renderStores();
+      updatePreview();
+      dlgStores.close();
+    });
+
+    // Exportar/Importar
+    btnExport.addEventListener('click', ()=>{
+      const data = JSON.stringify(loadCustomStores(), null, 2);
+      const blob = new Blob([data], {type: 'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'tiendas-personalizadas.json'; a.click();
+      setTimeout(()=> URL.revokeObjectURL(url), 1000);
+    });
+
+    inputImport.addEventListener('change', async (e)=>{
+      const file = e.target.files?.[0];
+      if (!file) return;
+      const text = await file.text();
+      try {
+        const arr = JSON.parse(text);
+        if (!Array.isArray(arr)) throw new Error('Formato inválido');
+        saveCustomStores(arr.filter(x=>x && x.id && x.name && typeof x.pattern==='string'));
+        renderStoresEditor();
+      } catch(err){
+        alert('No se pudo importar: ' + err.message);
+      } finally {
+        e.target.value = '';
+      }
+    });
+
+    function renderStoresEditor(){
+      const customs = loadCustomStores();
+      // Plantillas sugeridas (no se guardan hasta "Guardar")
+      const SUGGESTED = [
+        { id:"mrboard", name:"Mr. Board Games", pattern:"https://mrboardgames.mx/search?q={q}", plusSpaces:false },
+        { id:"hobbygames", name:"Hobby Games", pattern:"https://hobbygames.mx/search?q={q}", plusSpaces:false },
+        { id:"caravana", name:"La Caravana", pattern:"https://lacaravana.com.mx/search?q={q}", plusSpaces:false },
+      ];
+      const combined = [...customs];
+      if (combined.length === 0) combined.push(...SUGGESTED);
+
+      editor.innerHTML = '';
+      const header = document.createElement('div');
+      header.className = 'row2';
+      header.innerHTML = '<small class="muted">ID</small><small class="muted">Nombre</small><small class="muted">URL con {q}</small><small class="muted">+ espacios</small>';
+      editor.appendChild(header);
+
+      combined.forEach(item=> editor.appendChild(storeRow(item)));
+
+      const add = document.createElement('button');
+      add.type = 'button'; add.className = 'btn secondary'; add.textContent = 'Añadir tienda';
+      add.addEventListener('click', ()=> editor.appendChild(storeRow({id:"", name:"", pattern:"https://dominio.com/search?q={q}", plusSpaces:false})));
+      editor.appendChild(add);
+    }
+
+    function storeRow(item){
+      const wrap = document.createElement('div');
+      wrap.className = 'row2 card'; wrap.dataset.row = '1';
+      wrap.innerHTML = `
+        <input data-id placeholder="id" value="${item.id||''}" style="width:120px"/>
+        <input data-name placeholder="Nombre de la tienda" value="${item.name||''}" style="flex:1"/>
+        <input data-pattern placeholder="URL con {q}" value="${item.pattern||''}" style="flex:2"/>
+        <label class="store"><input data-plus type="checkbox" ${item.plusSpaces?'checked':''}/> + espacios</label>
+        <button type="button" class="btn secondary" data-test>Probar</button>
+        <button type="button" class="btn warn" data-del>Eliminar</button>
+      `;
+      wrap.querySelector('[data-test]').addEventListener('click', ()=>{
+        const temp = {
+          id: wrap.querySelector('[data-id]').value||'tmp',
+          name: wrap.querySelector('[data-name]').value||'tmp',
+          pattern: wrap.querySelector('[data-pattern]').value||'',
+          plusSpaces: wrap.querySelector('[data-plus]').checked
+        };
+        if (!temp.pattern.includes('{q}')) { alert('La URL debe contener {q}'); return; }
+        const url = buildUrl(temp, input.value || 'Catan');
+        window.open(url, '_blank');
+      });
+      wrap.querySelector('[data-del]').addEventListener('click', ()=> wrap.remove());
+      return wrap;
+    }
+
+    // =====================
+    // Pruebas simples (no invasivas)
+    // =====================
+    function runTests(){
+      const out = [];
+      function ok(name, cond){ out.push(`<div class="${cond?'pass':'fail'}">${cond?'✔':'✖'} ${name}</div>`); }
+      try {
+        ok('plusifySpaces reemplaza espacios por +', plusifySpaces('A B   C') === 'A+B+C');
+        const storePlus = { pattern:'https://x.com?q={q}', plusSpaces:true };
+        const storeEnc = { pattern:'https://x.com?q={q}', plusSpaces:false };
+        ok('buildUrl usa + cuando plusSpaces=true', buildUrl(storePlus, 'Café con Leche').includes('Caf%C3%A9+con+Leche'));
+        ok('buildUrl usa encodeURIComponent cuando plusSpaces=false', buildUrl(storeEnc, 'Café con Leche').includes('Caf%C3%A9%20con%20Leche'));
+        ok('currentLinks vacío si no hay query', (function(){ const v = input.value; input.value=''; const res=currentLinks(true).length===0; input.value=v; return res; })());
+        ok('preview usa "\\n" al unir', (function(){ const s=['a','b'].join('\n'); return s==='a\nb'; })());
+      } catch(e){ out.push(`<div class="fail">Excepción en pruebas: ${e.message}</div>`); }
+      if (testResults) testResults.innerHTML = out.join('');
+    }
+
+    // Init
+    renderStores();
+    loadState();
+    updatePreview();
+    runTests();
   </script>
 </body>
 </html>
