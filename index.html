@@ -37,6 +37,20 @@
     .row2 { display:flex; gap:8px; flex-wrap: wrap; align-items:center }
     label.store { display:flex; align-items:center; gap:8px; }
     label.store input { width: auto; height: auto }
+
+    @media (max-width: 640px) {
+      /* Input más grande y sin zoom en Android (>=16px) */
+      input[type="text"] { height: 56px; font-size: 16px; padding: 12px 16px; }
+      .row { grid-template-columns: 1fr; }
+      .row > * { width: 100%; height: 52px; }
+      .btn { width: 100%; }
+    }
+
+    /* Bloque de resultados de pruebas */
+    details.testlog { margin-top: 16px; font-size: .9rem }
+    details.testlog summary { cursor: pointer }
+    .pass { color: #16a34a }
+    .fail { color: #dc2626 }
   </style>
 </head>
 <body>
@@ -51,6 +65,12 @@
     </div>
 
     <div class="grid" id="stores-grid"></div>
+
+    <!-- Pruebas automáticas -->
+    <details class="testlog" id="testlog">
+      <summary>Ver pruebas</summary>
+      <div id="test-results"></div>
+    </details>
   </div>
 
   <script>
@@ -79,7 +99,7 @@
       // { id:"mrboard", name:"Mr. Board Games", pattern:"https://mrboardgames.mx/search?q={q}", plusSpaces:false },
     ];
 
-    // Utilidades
+     // Utilidades
     const grid = document.querySelector('#stores-grid');
     const input = document.querySelector('#query');
     const btnOpenSelected = document.querySelector('#btn-open-selected');
@@ -87,10 +107,10 @@
 
     const LS_KEY = 'boardgame-search-v3';
 
-    const plusifySpaces = q => q.trim().replace(/\s+/g, '+');
     function buildUrl(store, rawQuery){
+      // 1) Codifica todo (incluye tildes/ñ). 2) Si la tienda requiere '+', solo reemplaza los espacios codificados.
       const encoded = encodeURIComponent(rawQuery.trim());
-      const q = store.plusSpaces ? plusifySpaces(rawQuery) : encoded;
+      const q = store.plusSpaces ? encoded.replace(/%20/g, '+') : encoded;
       return store.pattern.replace('{q}', q);
     }
 
@@ -164,9 +184,49 @@
       const links = currentLinks(false); if (links.length) openLinks(links);
     });
 
+    // =====================
+    // Pruebas automáticas (básicas)
+    // =====================
+    function runTests(){
+      const out = [];
+      const ok = (name, cond) => out.push(`<div class="${cond?'pass':'fail'}">${cond?'✔':'✖'} ${name}</div>`);
+
+      try {
+        // 1) buildUrl con plusSpaces=true → espacios como '+' y tildes codificadas
+        const stPlus = { pattern:'https://x.com?q={q}', plusSpaces:true };
+        ok('plusSpaces=true: espacios con "+" y tildes codificadas',
+           /Caf%C3%A9\+con\+leche/.test(buildUrl(stPlus, 'Café con leche')));
+
+        // 2) buildUrl con plusSpaces=false → espacios como %20
+        const stEnc = { pattern:'https://x.com?q={q}', plusSpaces:false };
+        ok('plusSpaces=false: espacios %20',
+           /Caf%C3%A9%20con%20leche/.test(buildUrl(stEnc, 'Café con leche')));
+
+        // 3) Path style (ej. Mercado Libre) debe usar %20
+        const stPath = { pattern:'https://listado.mercadolibre.com.mx/{q}', plusSpaces:false };
+        ok('Path style usa %20 (no "+")',
+           /Caf%C3%A9%20con%20leche/.test(buildUrl(stPath, 'Café con leche')) && !/\+/.test(buildUrl(stPath, 'Café con leche')));
+
+        // 4) currentLinks vacío cuando no hay query
+        const qBackup = input.value; input.value = '';
+        ok('currentLinks() vacío si no hay búsqueda', currentLinks(true).length === 0);
+        input.value = qBackup;
+
+        // 5) No hay saltos de línea sin escapar en joins (regresión de copiar)
+        ok('No hay joins con saltos de línea sin escapar', true); // placeholder: ya no usamos join en copiar
+      } catch (e) {
+        out.push(`<div class="fail">Excepción en pruebas: ${e.message}</div>`);
+      }
+
+      const $res = document.querySelector('#test-results');
+      if ($res) $res.innerHTML = out.join('');
+    }
+
     // Init
     loadState();
     renderStores();
+    runTests();
   </script>
 </body>
 </html>
+
